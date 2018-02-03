@@ -14,9 +14,9 @@ def pull_facts():
 	db = sqlite3.connect('facts.db')
 
 	for li in dyk.ul.find_all("li"):
-		title = li.text.replace("?","").replace("...","TIL")
+		title = li.text.replace("?","").replace("...","TIL").replace(" (pictured)","")
 		link = "https://en.wikipedia.org"+li.b.a.get("href")
-		db.cursor().execute("INSERT INTO facts VALUES(?,?)",[title,link])
+		db.cursor().execute("INSERT INTO facts(title,link) VALUES(?,?)",[title,link])
 		db.commit()
 		print(title)
 
