@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib3
 import sqlite3
+import re
 
 def pull_facts():
 	http = urllib3.PoolManager()
@@ -14,7 +15,8 @@ def pull_facts():
 	db = sqlite3.connect('facts.db')
 
 	for li in dyk.ul.find_all("li"):
-		title = li.text.replace("?","").replace("...","TIL").replace(" (pictured)","")
+		title = li.text.replace("?","").replace("...","TIL")
+		title = re.sub("[\(\[].*?[\)\]]", "", title).replace("  "," ")
 		link = "https://en.wikipedia.org"+li.b.a.get("href")
 		db.cursor().execute("INSERT INTO facts(title,link) VALUES(?,?)",[title,link])
 		db.commit()
